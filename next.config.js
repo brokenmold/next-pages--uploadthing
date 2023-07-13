@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    esmExternals: false, // THIS IS THE FLAG THAT MATTERS
+    esmExternals: false,      // Uploadthing
   },
 }
 
