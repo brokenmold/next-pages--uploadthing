@@ -9,7 +9,7 @@ const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" }); 
 // File Router -- Can contain multiple files
 export const ourFileRouter = {
 
-  // Define as many FileRoutes as you like, each with a unique routeSlug
+  // Define File Route(s) (each w/ unique routeSlug)
   imageUploader: f({ image: { maxFileSize: "4MB" } })
 
     // Set permissions and file types for this FileRoute
