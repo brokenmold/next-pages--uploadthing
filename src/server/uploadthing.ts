@@ -4,28 +4,31 @@ import { createUploadthing, type FileRouter } from "uploadthing/next-legacy";
 
 const f = createUploadthing();
 
-const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" }); // Fake auth function
+// Fake auth function
+const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" });
 
 // File Router -- Can contain multiple files
 export const ourFileRouter = {
 
-  // Define File Route(s) (each w/ unique routeSlug)
+  // Define File Route(s) -- each w/ unique routeSlug
   imageUploader: f({ image: { maxFileSize: "4MB" } })
 
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req, res }) => {
 
-      // This code runs on your server before upload
+      // Runs on server before upload
       const user = await auth(req, res);
 
-      // If you throw, the user will not be able to upload
+      // If thrown, prevents user upload
       if (!user) throw new Error("Unauthorized");
 
-      // Whatever is returned here is accessible in onUploadComplete as `metadata`
+      // Returned as `metadata` upon onUploadComplete
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
+
+      // Runs on server after upload
+
       // console.log("Upload complete for userId:", metadata.userId);
       console.log("Upload Metadata:", metadata);
 
