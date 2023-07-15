@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
 import { createUploadthing, type FileRouter } from "uploadthing/next-legacy";
 
 const f = createUploadthing();
@@ -16,10 +15,10 @@ export const ourFileRouter = {
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req, res }) => {
 
-      // Runs on server before upload
+      // Pre-Upload -- Runs on server
       const user = await auth(req, res);
 
-      // If thrown, prevents user upload
+      // Prevent-Upload -- Thrown if User not authorized
       if (!user) throw new Error("Unauthorized");
 
       // Returned as `metadata` upon onUploadComplete
@@ -27,7 +26,7 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
 
-      // Runs on server after upload
+      // Post-Upload -- Runs on server
 
       // console.log("Upload complete for userId:", metadata.userId);
       console.log("Upload Metadata:", metadata);
