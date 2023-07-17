@@ -18,21 +18,21 @@ export const ourFileRouter = {
       // Pre-Upload -- Runs on server
       const user = await auth(req, res);
 
-      // Prevent-Upload -- Thrown if User not authorized
+      // Check User Auth
+      //? >>>>  Check User Against Auth.js Session  <<<<
       if (!user) throw new Error("Unauthorized");
 
-      // Returned as `metadata` upon onUploadComplete
+      // Returned as `metadata`
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
 
       // Post-Upload -- Runs on server
-
-      // console.log("Upload complete for userId:", metadata.userId);
       console.log("Upload Metadata:", metadata);
-
-      // console.log("Upload File Object: ", file.url);
       console.log("Upload File Object: ", file);
+
+      // console.log("File Object >> URL: ", file.url);
+      // console.log("Metadata >> User ID:", metadata.userId);
     }),
 } satisfies FileRouter;
 
