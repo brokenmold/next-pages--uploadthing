@@ -3,37 +3,41 @@ import { createUploadthing, type FileRouter } from "uploadthing/next-legacy";
 
 const f = createUploadthing();
 
-// Fake auth function
+// ! Get User Auth
 const auth = (req: NextApiRequest, res: NextApiResponse) => ({ id: "fakeId" });
 
-// File Router -- Can contain multiple files
+// > File Router -- Can contain multiple files
 export const ourFileRouter = {
 
-  // Define File Route(s) -- each w/ unique routeSlug
+  // > Define File Route(s) each w/ unique routeSlug
+  // > Set permissions, file types for route
   imageUploader: f({ image: { maxFileSize: "4MB" } })
 
-    // Set permissions and file types for this FileRoute
-    .middleware(async ({ req, res }) => {
+  // ? Run on server before upload
+  .middleware(async ({ req, res }) => {
 
-      // Pre-Upload -- Runs on server
-      const user = await auth(req, res);
+    // ! Get User
+    //^ const user = await auth(req, res);
+    const user = auth(req, res);
 
-      // Check User Auth
-      //? >>>>  Check User Against Auth.js Session  <<<<
-      if (!user) throw new Error("Unauthorized");
+    // > If not authorized, throw error
+    if (!user) throw new Error("Unauthorized");
 
-      // Returned as `metadata`
-      return { userId: user.id };
-    })
-    .onUploadComplete(async ({ metadata, file }) => {
+    return { userId: user.id };
+  })
+  .onUploadComplete(async ({ metadata, file }) => {
 
-      // Post-Upload -- Runs on server
-      console.log("Upload Metadata:", metadata);
-      console.log("Upload File Object: ", file);
-
-      // console.log("File Object >> URL: ", file.url);
-      // console.log("Metadata >> User ID:", metadata.userId);
-    }),
-} satisfies FileRouter;
-
+    // > Post-Upload
+    // ? Metadata Object
+      // metadata.userID
+      // metadata.fileSize
+      // metadata.fileSlug
+    // ? File Object
+      // file.url
+    // ! Handle return
+    console.log("Upload Metadata: ", metadata);
+    console.log("Upload File Object: ", file);
+  }),
+};
+//^ } satisfies FileRouter;
 export type OurFileRouter = typeof ourFileRouter;
